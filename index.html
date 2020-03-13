@@ -11,33 +11,36 @@
     <title>Music player</title>
   </head>
   <body>
-    <div class="container">
+    <div class="container" id="musicContainer">
       <header>
-        <div class="playlist">
-          <i class="fa fa-bars"></i>
-        </div>
-        <div class="settings">
-          <i class="fa fa-cog"></i>
-        </div>
+        <div class="pin1"></div>
+        <div class="pin2"></div>
       </header>
+
+      <audio
+        src="music/Bratia Stereo - Ayayay (ft. Tony Tonite).mp3"
+        id="audio"
+      ></audio>
       <main>
         <div class="player">
           <i class="fas fa-redo-alt"></i>
-          <i class="fa fa-fast-backward"></i>
-          <i class="fa fa-play"></i>
-          <i class="fa fa-fast-forward"></i>
+          <i class="fa fa-fast-backward" id="prev"></i>
+          <i class="fa fa-play" id="play"></i>
+          <i class="fa fa-fast-forward" id="next"></i>
           <i class="fa fa-random"></i>
         </div>
       </main>
       <footer>
-        <div class="title">The Vines - Ride</div>
+        <div class="title" id="title">The Vines - Ride</div>
         <div class="time-tracker">
           <div class="timer">
-            <div class="bg"></div>
+            <div class="bg" id="progress"></div>
           </div>
           <div class="time">00:80</div>
         </div>
       </footer>
     </div>
+
+    <script src="script.js"></script>
   </body>
 </html>
