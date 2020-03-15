@@ -9,6 +9,8 @@ let audio = document.getElementById("audio");
 let title = document.getElementById("title");
 let time = document.querySelector(".time");
 
+setVisualizer(audio);
+
 let songs = [
   "Bratia Stereo - Ayayay (ft. Tony Tonite)",
   "Isaac Chambers feat. Bluey Moon-Moonlight"
