@@ -77,7 +77,7 @@ function mainloop() {
 }
 
 function setVisualizer(player) {
-  //   player.src = URL.createObjectURL(this.files[0]);
+  // player.src = URL.createObjectURL(this.files[0]);
   //   player.load();
   //   sfbutton.classList.add("moveup");
 

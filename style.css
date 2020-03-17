@@ -14,9 +14,20 @@ body {
   color: #000;
 }
 
-.container {
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   width: 500px;
-  height: 360px;
+}
+
+.container {
+  position: relative;
+  width: 500px;
+  /* height: 360px; */
+  height: auto;
   background: #111;
   /* box-shadow: 0 30px 20px -20px #000, 0 -22px 20px -20px #000; */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 -3px 7px rgba(0, 0, 0, 0.2);
@@ -45,7 +56,26 @@ header .pin2 {
 header .pin2 {
   /* position: absolute;
   cursor: pointer; */
+  display: flex;
+  justify-content: center;
   right: 1rem;
+}
+
+#files {
+  display: none;
+}
+
+.btn {
+  background: transparent;
+  border: none;
+  color: cyan;
+  display: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.btn.active {
+  display: block;
 }
 
 main {
@@ -100,7 +130,9 @@ main .player .fas {
 
 main .player .fa:hover,
 main .player .fas:hover,
-.player #play.active {
+.player #play.active,
+#repeat.active,
+#random.active {
   color: cyan;
   text-shadow: 0 0 4px cyan;
 }
@@ -112,7 +144,7 @@ main .player .fa-play,
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* border: 2px solid #000; */
+  border: 2px solid #000;
   /* border: 2px solid rgba(0, 255, 255, 0.1); */
   border-radius: 50%;
   text-align: center;
@@ -124,14 +156,14 @@ main .player .fa-play,
   /* color: rgba(0, 255, 255, 0.1); */
 }
 
-#play.active {
-  border: 2px solid rgba(0, 255, 255, 0.9);
-}
-
-main .player .fa-play {
+main .player .fa-play.ready {
   border: 2px solid rgba(0, 255, 255, 0.1);
   color: rgba(0, 255, 255, 0.1);
   animation: pulse 0.8s ease-in-out infinite alternate;
+}
+
+#play.active {
+  border: 2px solid rgba(0, 255, 255, 0.9);
 }
 
 @keyframes pulse {
@@ -218,4 +250,23 @@ footer .time-tracker .timer .bg #runner {
 
 footer .time-tracker .time {
   line-height: 2rem;
+}
+
+ul {
+  /* position: absolute; */
+  padding: 15px 20px;
+  z-index: 1;
+  width: 98%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 -3px 7px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  height: 200px;
+  overflow: hidden;
+}
+
+ul li {
+  margin-top: 10px;
+  padding: 20px 15px;
+  list-style: none;
+  background: #111;
+  color: cyan;
 }
