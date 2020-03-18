@@ -9,7 +9,6 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  /* background: linear-gradient(180deg, #333, #111); */
   background: #111;
   color: #000;
 }
@@ -26,11 +25,10 @@ body {
 .container {
   position: relative;
   width: 500px;
-  /* height: 360px; */
   height: auto;
   background: #111;
-  /* box-shadow: 0 30px 20px -20px #000, 0 -22px 20px -20px #000; */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 -3px 7px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 
 header {
@@ -53,11 +51,13 @@ header .pin2 {
   cursor: pointer;
 }
 
-header .pin2 {
-  /* position: absolute;
-  cursor: pointer; */
+header .pin2,
+header .pin1 {
   display: flex;
   justify-content: center;
+}
+
+header .pin2 {
   right: 1rem;
 }
 
@@ -74,28 +74,19 @@ header .pin2 {
   outline: none;
 }
 
-.btn.active {
+.btn.active,
+.btn.list {
   display: block;
 }
 
 main {
   display: flex;
   justify-content: center;
-  /* align-items: center; */
   padding: 1rem 2rem;
 }
 
-/* .vz-wrapper {
-  position: relative;
-  cursor: pointer;
-} */
-
 .vz-wrapper.-canvas {
   position: relative;
-  /* top: 1%; */
-  /* top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
   height: initial;
   width: initial;
   background: transparent;
@@ -145,15 +136,12 @@ main .player .fa-play,
   left: 50%;
   transform: translate(-50%, -50%);
   border: 2px solid #000;
-  /* border: 2px solid rgba(0, 255, 255, 0.1); */
   border-radius: 50%;
   text-align: center;
   line-height: 88px;
   background: linear-gradient(0deg, #111, #222);
   box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2),
     0 0 8px rgba(0, 0, 0, 0.6);
-
-  /* color: rgba(0, 255, 255, 0.1); */
 }
 
 main .player .fa-play.ready {
@@ -253,20 +241,60 @@ footer .time-tracker .time {
 }
 
 ul {
-  /* position: absolute; */
-  padding: 15px 20px;
-  z-index: 1;
+  position: relative;
+  top: -10px;
+  padding: 10px;
   width: 98%;
+  height: 30px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 -3px 7px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
+  overflow: auto;
+  background: #111;
+  transition: all 0.5s ease-in-out;
+}
+
+ul::-webkit-scrollbar {
+  display: none;
+}
+
+ul.active {
   height: 200px;
-  overflow: hidden;
 }
 
 ul li {
-  margin-top: 10px;
-  padding: 20px 15px;
+  position: relative;
+  display: none;
+  align-items: center;
+  padding: 15px 10px;
   list-style: none;
-  background: #111;
   color: cyan;
+  cursor: pointer;
+  transition: all 0.5s ease-in-out;
+}
+
+ul li:hover {
+  background: #222;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 -3px 7px rgba(0, 0, 0, 0.2);
+}
+
+ul.active li {
+  display: flex;
+}
+
+.album-image {
+  position: relative;
+  width: 100px;
+  height: 60px;
+}
+
+img {
+  width: 100px;
+  height: 100%;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
 }

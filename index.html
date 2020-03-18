@@ -11,10 +11,20 @@
     <title>Music player</title>
   </head>
   <body>
+    <!--MAin container-->
     <div class="main-container">
+      <!--Player container-->
       <div class="container" id="musicContainer">
+        <!--Header in player-->
         <header>
-          <div class="pin1"></div>
+          <!--Playlist button-->
+          <div class="pin1">
+            <button class="btn list" id="listBtn">
+              <i class="fas fa-list-ul"></i>
+            </button>
+          </div>
+
+          <!--Add/Remove button-->
           <div class="pin2">
             <input
               type="file"
@@ -33,17 +43,15 @@
         </header>
 
         <audio src="" id="audio"></audio>
-        <main>
-          <!-- <div class="vz-wrapper -canvas"></div> -->
-          <!-- <audio
-            src="music/Bratia Stereo - Ayayay (ft. Tony Tonite).mp3"
-            id="audio"
-          ></audio> -->
 
+        <!--Container for buttons and sound visualization-->
+        <main>
+          <!--Visualization bar-->
           <div class="vz-wrapper -canvas">
             <canvas id="myCanvas" width="250" height="150"></canvas>
           </div>
 
+          <!--Buttons-->
           <div class="player">
             <i class="fas fa-redo-alt" id="repeat"></i>
             <i class="fa fa-fast-backward" id="prev"></i>
@@ -52,6 +60,8 @@
             <i class="fa fa-random" id="random"></i>
           </div>
         </main>
+
+        <!--Container for progress bar-->
         <footer>
           <div class="title" id="title"></div>
           <div class="time-tracker">
@@ -65,10 +75,10 @@
         </footer>
       </div>
 
+      <!--Playlis container-->
       <ul id="playList"></ul>
     </div>
 
-    <!-- <script src="/library/jdataview.js"></script> -->
     <script src="library/id3-minimized.js"></script>
     <script src="library/myVisualizer.js"></script>
     <script src="script.js"></script>

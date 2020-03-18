@@ -9,14 +9,6 @@ let ctx = canvas.getContext("2d");
 
 var audioCtx, analyser, source;
 
-// canvas.width = window.innerWidth * 0.8;
-// canvas.height = window.innerHeight * 0.4;
-
-// window.onresize = function() {
-//   canvas.width = window.innerWidth * 0.8;
-//   canvas.height = window.innerHeight * 0.4;
-// };
-
 function draw_bars(values) {
   var len = values.length - ~~(values.length / MAX_BARS) * 4;
   var normFac = 255;
@@ -63,7 +55,6 @@ function draw_bars(values) {
   var szW = ~~(150 + fac);
   var szH = ~~(100 + fac);
   var sz = szW.toString() + "% " + szH.toString() + "%";
-  //   bg.style.backgroundSize = sz;
 }
 
 function mainloop() {
@@ -77,16 +68,11 @@ function mainloop() {
 }
 
 function setVisualizer(player) {
-  // player.src = URL.createObjectURL(this.files[0]);
-  //   player.load();
-  //   sfbutton.classList.add("moveup");
-
   audioCtx = new AudioContext();
   analyser = audioCtx.createAnalyser();
   source = audioCtx.createMediaElementSource(player);
   source.connect(analyser);
   analyser.connect(audioCtx.destination);
 
-  //   player.play();
   mainloop();
 }

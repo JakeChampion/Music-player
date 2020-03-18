@@ -9,52 +9,84 @@ let randomBtn = document.getElementById("random");
 let addBtn = document.getElementById("addBtn");
 let removeBtn = document.getElementById("removeBtn");
 let musicFiles = document.getElementById("files");
+let listBtn = document.getElementById("listBtn");
 
+//The Other elements
 let progress = document.getElementById("runner");
 let audio = document.getElementById("audio");
 let title = document.getElementById("title");
 let time = document.querySelector(".time");
 let playList = document.getElementById("playList");
 
-// let songs = [
-//   "Bratia Stereo - Ayayay (ft. Tony Tonite)",
-//   "Isaac Chambers feat. Bluey Moon-Moonlight"
-// ];
-
+//Variables
 let songs;
-let parsedTags = [];
-
-let playListSongs = [];
-
 let songIndex = 0;
 let randomOrderCount = 0;
 
+//Functions
 function getFiles() {
-  console.log("!");
+  //get audio files
   songs = musicFiles.files;
-  console.log(songs);
 
+  //upload to audio element
   loadSong(songs[songIndex]);
+
+  //set visualizer
   if (!audioCtx) {
     setVisualizer(audio);
   }
 
-  createPlayList();
+  //parse ID3 tags for play list
   parseTags();
-  console.log(parsedTags);
 
+  //add classes
   addBtn.classList.toggle("active");
   removeBtn.classList.toggle("active");
   playBtn.classList.add("ready");
 }
 
-function createPlayList() {
-  for (let i = 0; i < songs.length; i++) {
-    let item = document.createElement("li");
+function loadSong(song) {
+  title.innerText = song.name;
+  audio.src = URL.createObjectURL(song);
+}
 
-    item.innerText = songs[i].name;
-    playList.appendChild(item);
-  }
+function createPlayList(parsed, index) {
+  let item = document.createElement("li");
+  item.setAttribute("id", `${index}`);
+
+  //Create div for image and img element
+  let imageDiv = document.createElement("div");
+  let image = document.createElement("img");
+
+  imageDiv.classList.add("album-image");
+  image.src = parsed.picture;
+
+  //Create div for names of song and artist
+  let divNames = document.createElement("div");
+  let songName = document.createElement("p");
+  let artistName = document.createElement("p");
+
+  divNames.classList.add("info");
+  songName.innerText = parsed.title;
+  artistName.innerText = parsed.artist;
+
+  //Add children to parent <li>
+  imageDiv.appendChild(image);
+
+  divNames.appendChild(songName);
+  divNames.appendChild(artistName);
+
+  item.appendChild(imageDiv);
+  item.appendChild(divNames);
+
+  item.addEventListener("click", () => {
+    console.log(index);
+    songIndex = index;
+    loadSong(songs[songIndex]);
+    playSong();
+  });
+
+  playList.appendChild(item);
 }
 
 function parseTags() {
@@ -64,9 +96,7 @@ function parseTags() {
     ID3.loadTags(
       url,
       function() {
-        let item = createObjectWithTags(url);
-        parsedTags.push(item);
-        // showTags(url);
+        createObjectWithTags(url, i);
       },
       {
         tags: ["title", "artist", "album", "picture"],
@@ -76,54 +106,31 @@ function parseTags() {
   }
 }
 
-function createObjectWithTags(url) {
+function createObjectWithTags(url, index) {
   let tags = ID3.getAllTags(url);
+
   let newItem = {
     title: tags.title || url,
     artist: tags.artist || "Uknown artist",
-    album: tags.album || "Uknown album"
+    album: tags.album || "Uknown album",
+    picture: ""
   };
+  console.log(newItem);
 
-  return newItem;
-  // console.log(newItem);
-  // document.getElementById('title').textContent = tags.title || "";
-  // document.getElementById('artist').textContent = tags.artist || "";
-  // document.getElementById('album').textContent = tags.album || "";
-  // var image = tags.picture;
-  // if (image) {
-  //   var base64String = "";
-  //   for (var i = 0; i < image.data.length; i++) {
-  //     base64String += String.fromCharCode(image.data[i]);
-  //   }
-  //   var base64 =
-  //     "data:" + image.format + ";base64," + window.btoa(base64String);
-  //   document.getElementById("picture").setAttribute("src", base64);
-  // } else {
-  //   document.getElementById("picture").style.display = "none";
-  // }
-}
-
-function loadFile(song) {
-  let url = song.urn || song.name;
-
-  ID3.loadTags(
-    url,
-    function() {
-      // showTags(url);
-    },
-    {
-      tags: ["title", "artist", "album", "picture"],
-      dataReader: ID3.FileAPIReader(song)
+  let image = tags.picture;
+  if (image) {
+    let base64String = "";
+    for (let i = 0; i < image.data.length; i++) {
+      base64String += String.fromCharCode(image.data[i]);
     }
-  );
-}
+    let base64 =
+      "data:" + image.format + ";base64," + window.btoa(base64String);
+    newItem.picture = base64;
+  } else {
+    newItem.picture = "images/cello.jpg";
+  }
 
-function loadSong(song) {
-  // title.innerText = song;
-  // audio.src = `music/${song}.mp3`;
-
-  title.innerText = song.name;
-  audio.src = URL.createObjectURL(song);
+  createPlayList(newItem, index);
 }
 
 function playSong() {
@@ -141,8 +148,6 @@ function pauseSong() {
   playBtn.classList.remove("fa-pause");
   playBtn.classList.remove("active");
   playBtn.classList.add("fa-play");
-
-  // console.log(songs.length);
 
   if (songs) {
     playBtn.classList.add("ready");
@@ -199,12 +204,10 @@ function setProgress(element) {
   let width = this.clientWidth;
   let clickX = element.offsetX;
   let duration = audio.duration;
-  // console.log(clickX);
   audio.currentTime = (clickX / width) * duration;
 }
 
 function randomOrderNextSong() {
-  // randomOrderCount++;
   songIndex = Math.floor(Math.random() * songs.length - 1 + 1);
   console.log(songIndex);
   loadSong(songs[songIndex]);
@@ -245,10 +248,12 @@ function cleanPlayList() {
   title.innerText = "";
   audio.src = "";
   progress.style.width = "0%";
+  playList.textContent = "";
+  musicFiles.value = "";
 
   addBtn.classList.toggle("active");
   removeBtn.classList.toggle("active");
-  musicFiles.value = "";
+  playList.classList.toggle("active");
 }
 
 playBtn.addEventListener("click", () => {
@@ -261,18 +266,18 @@ playBtn.addEventListener("click", () => {
   }
 });
 
+//Set liseners to the buttons
 prevBtn.addEventListener("click", prevSong);
 nextBtn.addEventListener("click", nextSong);
 repeatBtn.addEventListener("click", () => repeatBtn.classList.toggle("active"));
 randomBtn.addEventListener("click", () => randomBtn.classList.toggle("active"));
-// repeatBtn.addEventListener("click");
+removeBtn.addEventListener("click", cleanPlayList);
+addBtn.addEventListener("click", () => musicFiles.click());
+musicFiles.addEventListener("change", getFiles);
+listBtn.addEventListener("click", () => playList.classList.toggle("active"));
 
+//se listeners for audio element
 audio.addEventListener("timeupdate", updateProgress);
-// audio.addEventListener("ended", nextSong);
 audio.addEventListener("ended", repeatSongs);
 
 progress.parentElement.addEventListener("click", setProgress);
-
-addBtn.addEventListener("click", () => musicFiles.click());
-musicFiles.addEventListener("change", getFiles);
-removeBtn.addEventListener("click", cleanPlayList);
