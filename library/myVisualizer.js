@@ -9,7 +9,7 @@ let ctx = canvas.getContext("2d");
 
 var audioCtx, analyser, source;
 
-function draw_bars(values) {
+function draw_bars(values, color) {
   var len = values.length - ~~(values.length / MAX_BARS) * 4;
   var normFac = 255;
   var maxValue = normFac;
@@ -27,7 +27,7 @@ function draw_bars(values) {
     ctx.shadowBlur = 8;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 4;
-    ctx.strokeStyle = "rgba(0, 255, 255, 0.9)";
+    ctx.strokeStyle = color;
     ctx.lineWidth = BAR_WIDTH;
     ctx.lineCap = "round";
     ctx.moveTo(x, y);
@@ -57,12 +57,12 @@ function draw_bars(values) {
   var sz = szW.toString() + "% " + szH.toString() + "%";
 }
 
-function mainloop() {
+function mainloop(color) {
   var fbc = new Uint8Array(analyser.frequencyBinCount);
   analyser.getByteFrequencyData(fbc);
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  draw_bars(fbc);
+  draw_bars(fbc, color);
 
   requestAnimationFrame(mainloop);
 }
@@ -74,5 +74,5 @@ function setVisualizer(player) {
   source.connect(analyser);
   analyser.connect(audioCtx.destination);
 
-  mainloop();
+  mainloop("rgba(0, 255, 255, 0.9)");
 }

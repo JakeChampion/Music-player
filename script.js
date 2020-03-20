@@ -1,3 +1,4 @@
+let bodyElement = document.querySelector("body");
 let musicContainer = document.getElementById("musicContainer");
 
 //Buttons
@@ -9,7 +10,8 @@ let randomBtn = document.getElementById("random");
 let addBtn = document.getElementById("addBtn");
 let removeBtn = document.getElementById("removeBtn");
 let musicFiles = document.getElementById("files");
-let listBtn = document.getElementById("listBtn");
+let modeBtn = document.querySelector(".pin3");
+let listBtn = document.querySelector(".pin1");
 
 //The Other elements
 let progress = document.getElementById("runner");
@@ -22,6 +24,33 @@ let playList = document.getElementById("playList");
 let songs;
 let songIndex = 0;
 let randomOrderCount = 0;
+
+//Set liseners to the buttons
+playBtn.addEventListener("click", () => {
+  let isPlaying = playBtn.classList.contains("active");
+
+  if (isPlaying) {
+    pauseSong();
+  } else {
+    playSong();
+  }
+});
+
+prevBtn.addEventListener("click", prevSong);
+nextBtn.addEventListener("click", nextSong);
+repeatBtn.addEventListener("click", () => repeatBtn.classList.toggle("active"));
+randomBtn.addEventListener("click", () => randomBtn.classList.toggle("active"));
+removeBtn.addEventListener("click", cleanPlayList);
+addBtn.addEventListener("click", () => musicFiles.click());
+musicFiles.addEventListener("change", getFiles);
+listBtn.addEventListener("click", () => playList.classList.toggle("active"));
+modeBtn.addEventListener("click", darkLightMode);
+
+//se listeners for audio element
+audio.addEventListener("timeupdate", updateProgress);
+audio.addEventListener("ended", repeatSongs);
+
+progress.parentElement.addEventListener("click", setProgress);
 
 //Functions
 function getFiles() {
@@ -52,7 +81,7 @@ function loadSong(song) {
 
 function createPlayList(parsed, index) {
   let item = document.createElement("li");
-  item.setAttribute("id", `${index}`);
+  item.setAttribute("id", `li${index}`);
 
   //Create div for image and img element
   let imageDiv = document.createElement("div");
@@ -66,6 +95,10 @@ function createPlayList(parsed, index) {
   let songName = document.createElement("p");
   let artistName = document.createElement("p");
 
+  //Create pause icon
+  let icon = document.createElement("i");
+  icon.classList.add("fa", "fa-pause");
+
   divNames.classList.add("info");
   songName.innerText = parsed.title;
   artistName.innerText = parsed.artist;
@@ -78,6 +111,7 @@ function createPlayList(parsed, index) {
 
   item.appendChild(imageDiv);
   item.appendChild(divNames);
+  item.appendChild(icon);
 
   item.addEventListener("click", () => {
     console.log(index);
@@ -115,7 +149,6 @@ function createObjectWithTags(url, index) {
     album: tags.album || "Uknown album",
     picture: ""
   };
-  console.log(newItem);
 
   let image = tags.picture;
   if (image) {
@@ -140,6 +173,13 @@ function playSong() {
   playBtn.classList.add("active");
 
   if (songs) {
+    let activeSong = playList.querySelector("li i.active");
+
+    if (activeSong) {
+      activeSong.classList.remove("active");
+    }
+
+    playList.querySelector(`#li${songIndex} i`).classList.add("active");
     audio.play();
   }
 }
@@ -151,6 +191,7 @@ function pauseSong() {
 
   if (songs) {
     playBtn.classList.add("ready");
+    playList.querySelector("li i.active").classList.remove("active");
   } else {
     playBtn.classList.remove("ready");
   }
@@ -253,31 +294,23 @@ function cleanPlayList() {
 
   addBtn.classList.toggle("active");
   removeBtn.classList.toggle("active");
-  playList.classList.toggle("active");
+  playList.classList.remove("active");
 }
 
-playBtn.addEventListener("click", () => {
-  let isPlaying = playBtn.classList.contains("active");
+function darkLightMode() {
+  bodyElement.classList.toggle("light");
 
-  if (isPlaying) {
-    pauseSong();
+  if (bodyElement.className === "light") {
+    modeBtn.querySelector(".fas").classList.remove("fa-moon");
+    modeBtn.querySelector(".fas").classList.add("fa-sun");
+    if (songs) {
+      mainloop("rgba(176, 2, 2, 0.9)");
+    }
   } else {
-    playSong();
+    modeBtn.querySelector(".fas").classList.remove("fa-sun");
+    modeBtn.querySelector(".fas").classList.add("fa-moon");
+    if (songs) {
+      mainloop("rgba(0, 255, 255, 0.9)");
+    }
   }
-});
-
-//Set liseners to the buttons
-prevBtn.addEventListener("click", prevSong);
-nextBtn.addEventListener("click", nextSong);
-repeatBtn.addEventListener("click", () => repeatBtn.classList.toggle("active"));
-randomBtn.addEventListener("click", () => randomBtn.classList.toggle("active"));
-removeBtn.addEventListener("click", cleanPlayList);
-addBtn.addEventListener("click", () => musicFiles.click());
-musicFiles.addEventListener("change", getFiles);
-listBtn.addEventListener("click", () => playList.classList.toggle("active"));
-
-//se listeners for audio element
-audio.addEventListener("timeupdate", updateProgress);
-audio.addEventListener("ended", repeatSongs);
-
-progress.parentElement.addEventListener("click", setProgress);
+}
