@@ -83,38 +83,23 @@ function createPlayList(parsed, index) {
   let item = document.createElement("li");
   item.setAttribute("id", `li${index}`);
 
-  //Create div for image and img element
-  let imageDiv = document.createElement("div");
-  let image = document.createElement("img");
+  //Create divs for "li"
+  item.innerHTML = `
+  <div class="album-image">
+    <img src="${parsed.picture}" >
+  </div>
 
-  imageDiv.classList.add("album-image");
-  image.src = parsed.picture;
+  <div class="info">
+    <p>${parsed.title}</p>
+    <p>${parsed.artist}</p>
+  </div>
 
-  //Create div for names of song and artist
-  let divNames = document.createElement("div");
-  let songName = document.createElement("p");
-  let artistName = document.createElement("p");
-
-  //Create pause icon
-  let icon = document.createElement("i");
-  icon.classList.add("fa", "fa-pause");
-
-  divNames.classList.add("info");
-  songName.innerText = parsed.title;
-  artistName.innerText = parsed.artist;
-
-  //Add children to parent <li>
-  imageDiv.appendChild(image);
-
-  divNames.appendChild(songName);
-  divNames.appendChild(artistName);
-
-  item.appendChild(imageDiv);
-  item.appendChild(divNames);
-  item.appendChild(icon);
+  <i class="fa fa-pause"></i>
+  
+  
+  `;
 
   item.addEventListener("click", () => {
-    console.log(index);
     songIndex = index;
     loadSong(songs[songIndex]);
     playSong();
@@ -129,12 +114,12 @@ function parseTags() {
 
     ID3.loadTags(
       url,
-      function() {
+      function () {
         createObjectWithTags(url, i);
       },
       {
         tags: ["title", "artist", "album", "picture"],
-        dataReader: ID3.FileAPIReader(songs[i])
+        dataReader: ID3.FileAPIReader(songs[i]),
       }
     );
   }
@@ -147,7 +132,7 @@ function createObjectWithTags(url, index) {
     title: tags.title || url,
     artist: tags.artist || "Uknown artist",
     album: tags.album || "Uknown album",
-    picture: ""
+    picture: "",
   };
 
   let image = tags.picture;
@@ -257,8 +242,8 @@ function randomOrderNextSong() {
 
 function repeatSongs() {
   if (
-    randomBtn.className === "fa fa-random active" &&
-    repeatBtn.className === "fas fa-redo-alt"
+    randomBtn.className.includes("active") &&
+    !repeatBtn.className.includes("active")
   ) {
     randomOrderCount++;
     if (randomOrderCount >= songs.length) {
@@ -268,13 +253,12 @@ function repeatSongs() {
       randomOrderNextSong();
     }
   } else if (
-    randomBtn.className === "fa fa-random active" &&
-    repeatBtn.className === "fas fa-redo-alt active"
+    randomBtn.className.includes("active") &&
+    repeatBtn.className.includes("active")
   ) {
-    console.log("random infinite");
     randomOrderNextSong();
   } else if (
-    repeatBtn.className === "fas fa-redo-alt" &&
+    !repeatBtn.className.includes("active") &&
     songIndex === songs.length - 1
   ) {
     pauseSong();
